@@ -52,3 +52,96 @@ VALUES ('sarahi', 'djwshsj', 'md', '2430069878', 'F' , 1);
 GO
 SELECT * FROM Empleado;
 GO
+
+-- Creacion de primary key compuestas
+
+CREATE TABLE Tabla1
+(
+ Tabla1id1 int not null,
+ Tabla1id2 int not null,
+ Nombre nvarchar(20) not null,
+ CONSTRAINT pk_tabla1
+ PRIMARY KEY(Tabla1id1, Tabla1id2)
+);
+GO
+
+--Razon de cardinalidad 1:N
+CREATE TABLE tabla2(
+Tabla2id int not null identity (1,1),
+Nombre varchar (20),
+Tabla1id1 int, 
+Tabla1id2 int,
+CONSTRAINT pk_tabla2
+PRIMARY KEY (Tabla1id2),
+CONSTRAINT fk_tabla2_tabla1
+FOREIGN KEY (Tabla1id1, Tabla1id2)
+REFERENCES Tabla1(Tabla1id1 , Tabla1id2)
+);
+GO
+
+--Razon de cardinalidad 1:1 (fidelidad)
+CREATE TABLE Employee
+(
+Id int  not null identity (1,1),
+Nombre varchar (20) not null,
+Ap1 varchar(15) not null,
+Ap2 varchar(15),
+Sexo char (1) not null,
+Salario money not null,
+CONSTRAINT pk_Employee
+PRIMARY KEY(Id),
+CONSTRAINT chk_Sexo2
+CHECK (Sexo in ('M', 'F')),
+CONSTRAINT chk_Salario
+CHECK (Salario>0.0)
+);
+GO
+
+CREATE TABLE Departmet
+(
+ Id int not null identity (1,1),
+ NombreProyecto nvarchar(20) not null,
+ Ubicacion varchar(15) not null, 
+ FechaInicio date not null,
+  IdEmployee int not null,
+ CONSTRAINT pk_Department
+ PRIMARY KEY(Id),
+ CONSTRAINT unique_nombreproyecto
+ UNIQUE (NombreProyecto),
+ CONSTRAINT unique_IdEmployee 
+ UNIQUE(IdEmployee), 
+ CONSTRAINT fk_Department_Employee
+ FOREIGN KEY (IdEmployee)
+ REFERENCES Employee(Id)
+);
+GO
+
+
+--Razon de Cardinalidad N:M 
+
+CREATE TABLE Project
+(
+ProjectId int  not null identity (1,1),
+Nombre varchar (20) not null,
+CONSTRAINT pk_Project
+PRIMARY KEY(ProjectId),
+CONSTRAINT Unique_Nombre
+UNIQUE (Nombre)
+);
+GO
+
+CREATE TABLE Work_On
+(
+ EmployeId int not null,
+ ProjectId int not null,
+ Horas int not null, 
+ CONSTRAINT pk_Work_On
+ PRIMARY KEY (EmployeId, ProjectId),
+ CONSTRAINT fk_Work_On_Employee
+ FOREIGN KEY(EmployeId)
+ REFERENCES Employee(Id),
+ CONSTRAINT fk_work_On_Project
+ Foreign key (ProjectId)
+ REFERENCES Project(ProjectId)
+);
+GO
