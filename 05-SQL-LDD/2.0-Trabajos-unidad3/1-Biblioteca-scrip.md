@@ -1,4 +1,5 @@
 --Crear base de datos de datos biblioteca
+```sql
 
 CREATE DATABASE biblioteca;
 GO
@@ -37,3 +38,4 @@ FOREIGN KEY (NumLector)
 REFERENCES Lector(NumLector)
 );
 GO
+ ```sql
